@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>منصة الدكتور أحمد سند لشرح الفيزياء ببساطة (النسخة المستقلة)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'Cairo', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+  <div id="app" class="flex flex-col min-h-screen">
+    <!-- Header -->
+    <header class="sticky top-0 z-40 bg-slate-950/90 backdrop-blur-md border-b border-slate-800 px-4 py-3">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('home')">
+          <div class="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center font-black text-white text-lg">⚛</div>
+          <div>
+            <h1 class="font-black text-base sm:text-lg text-white">د. أحمد سند</h1>
+            <p class="text-[11px] text-slate-400">شرح الفيزياء ببساطة 2026</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2" id="header-actions">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content View -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6" id="main-view">
+      <!-- Dynamic Content -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-900 py-6 text-center text-xs text-slate-500">
+      <p>© 2026 جميع الحقوق محفوظة لمنصة الدكتور أحمد سند لشرح الفيزياء ببساطة</p>
+    </footer>
+  </div>
+
+  <!-- Shared JavaScript Engine with LocalStorage and JSON Sync -->
+  <script>
+    // Master State
+    const DB_KEY = 'dr_sanad_standalone_db';
+    let db = {
+      students: [],
+      lessons: [],
+      books: [],
+      codes: [],
+      quizzes: [],
+      grades: [],
+      logs: []
+    };
+
+    let currentStudent = null;
+    let currentAdmin = null;
+    let currentView = 'home';
+
+    // Load from LocalStorage
+    function initDb() {
+      try {
+        const saved = localStorage.getItem(DB_KEY);
+        if (saved) {
+          db = JSON.parse(saved);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+      renderHeader();
+      renderView();
+    }
+
+    function saveDb() {
+      localStorage.setItem(DB_KEY, JSON.stringify(db));
+    }
+
+    function navigate(view) {
+      currentView = view;
+      renderHeader();
+      renderView();
+    }
+
+    function renderHeader() {
+      const container = document.getElementById('header-actions');
+      if (currentAdmin) {
+        container.innerHTML = `
+          <button onclick="navigate('admin')" class="px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs">لوحة الإدارة</button>
+          <button onclick="logout()" class="px-3 py-1.5 rounded-xl bg-rose-500/20 text-rose-300 font-bold text-xs">خروج</button>
+        `;
+      } else if (currentStudent) {
+        container.innerHTML = `
+          <span class="text-xs font-bold text-slate-200 hidden sm:inline">${currentStudent.fullName}</span>
+          <button onclick="navigate('content')" class="px-3 py-1.5 rounded-xl bg-blue-600 text-white font-bold text-xs">حصصي وكتبي</button>
+          <button onclick="logout()" class="px-3 py-1.5 rounded-xl bg-rose-500/20 text-rose-300 font-bold text-xs">خروج</button>
+        `;
+      } else {
+        container.innerHTML = `
+          <button onclick="openModal('adminLoginModal')" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 font-bold text-xs">دخول الإداري</button>
+          <button onclick="openModal('loginModal')" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 font-bold text-xs">تسجيل دخول</button>
+          <button onclick="openModal('registerModal')" class="px-3 py-1.5 rounded-xl bg-blue-600 text-white font-bold text-xs">إنشاء حساب</button>
+        `;
+      }
+    }
+
+    function renderView() {
+      const main = document.getElementById('main-view');
+
+      if (currentView === 'home') {
+        main.innerHTML = `
+          <div class="text-center py-12">
+            <h2 class="text-3xl sm:text-5xl font-black text-white mb-4">
+              أهلاً بك في منصة الدكتور أحمد سند لشرح الفيزياء ببساطة
+            </h2>
+            <p class="text-sm sm:text-base text-slate-400 max-w-2xl mx-auto mb-8">
+              المنصة الشاملة لشرح الفيزياء - فصول تفاعلية، مذكرات PDF، واختبارات إلكترونية مقننة.
+            </p>
+            ${!currentStudent && !currentAdmin ? `
+              <div class="flex items-center justify-center gap-3">
+                <button onclick="openModal('registerModal')" class="px-6 py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm">إنشاء حساب جديد</button>
+                <button onclick="openModal('loginModal')" class="px-6 py-3 rounded-2xl bg-slate-900 border border-slate-700 text-slate-200 font-bold text-sm">تسجيل الدخول</button>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      } else if (currentView === 'admin') {
+        renderAdminDashboard();
+      }
+    }
+
+    function logout() {
+      currentStudent = null;
+      currentAdmin = null;
+      navigate('home');
+    }
+
+    function openModal(id) {
+      alert('يرجى استخدام واجهة التطبيق الرئيسية المتطورة للتسجيل والإدارة.');
+    }
+
+    initDb();
+  </script>
+</body>
+</html>

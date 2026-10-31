@@ -1,0 +1,6 @@
+{
+  "name": "منصة د. أحمد سند للفيزياء",
+  "description": "منصة الدكتور أحمد سند لشرح الفيزياء ببساطة - فصول تفاعلية، كتب ومذكرات، اختبارات إلكترونية ولوحة إدارة شاملة.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

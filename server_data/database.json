@@ -1,0 +1,38 @@
+{
+  "version": "2.0.0",
+  "lastUpdated": "2026-10-31T09:36:11.284Z",
+  "admins": [
+    {
+      "id": "adm-1",
+      "username": "abdo2020",
+      "password": "1010",
+      "name": "المشرف العام (عبده)",
+      "role": "superadmin",
+      "createdAt": "2026-10-25 10:00:00"
+    },
+    {
+      "id": "adm-2",
+      "username": "ah sand",
+      "password": "sand111",
+      "name": "د. أحمد سند",
+      "role": "superadmin",
+      "createdAt": "2026-10-25 10:00:00"
+    }
+  ],
+  "students": [],
+  "lessons": [],
+  "books": [],
+  "codes": [],
+  "quizzes": [],
+  "grades": [],
+  "logs": [
+    {
+      "id": "log-init-1",
+      "timestamp": "2026-10-31 01:00:00",
+      "action": "تهيئة منصة د. أحمد سند للفيزياء",
+      "actor": "النظام المركزي",
+      "category": "admin",
+      "details": "تم بدء تشغيل المنصة المركزية بقاعدة بيانات جديدة ونظيفة ومزامنة مباشرة عبر الخادم المركزي لكافة الأجهزة والمتصفحات."
+    }
+  ]
+}
